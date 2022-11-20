@@ -8,5 +8,5 @@ class MainViewModel : ViewModel() {
     private val accessor = IAccessor.create()
     private val provider = PictureProvider(accessor)
 
-    suspend fun getPictures() = provider.getPictures(0,100)
+    suspend fun getPictures() = provider.getPictures(0,10)
 }

@@ -12,7 +12,7 @@ class PictureViewHolder(view: View): RecyclerView.ViewHolder(view) {
     protected val imageLoader by lazy { Picasso.get() }
 
     fun bind(picture: Picture) {
-        val url = "https://cataas.com/${picture.imageId()}"
+        val url = "https://cataas.com/cat/${picture.imageId()}"
         imageLoader.load(url).into(image)
     }
 }

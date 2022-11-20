@@ -5,6 +5,7 @@ import com.vk.homework2.objects.Picture
 
 class PictureProvider(val accessor: IAccessor) {
     suspend fun getPictures(offset: Int, limit: Int): List<Picture> {
+        // Добавить проверку кэша
         return accessor.getPictures(offset, limit)
     }
 }
