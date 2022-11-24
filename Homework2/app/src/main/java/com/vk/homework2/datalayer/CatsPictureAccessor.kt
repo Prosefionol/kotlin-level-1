@@ -9,13 +9,13 @@ import retrofit2.http.GET
 import retrofit2.http.Headers
 import retrofit2.http.Query
 
-interface IAccessor {
+interface CatsPictureAccessor {
     @GET("/api/cats")
     @Headers("X-User-Agent: meow")
     suspend fun getPictures(@Query("skip") offset: Int, @Query("limit") limit: Int): List<Picture>
 
     companion object {
-        fun create(): IAccessor {
+        fun create(): CatsPictureAccessor {
             val loggingInterceptor = HttpLoggingInterceptor().apply {
                 level = HttpLoggingInterceptor.Level.BODY
             }
@@ -30,7 +30,7 @@ interface IAccessor {
                 baseUrl("https://cataas.com/")
             }.build()
 
-            return retrofit.create(IAccessor::class.java)
+            return retrofit.create(CatsPictureAccessor::class.java)
         }
     }
 }

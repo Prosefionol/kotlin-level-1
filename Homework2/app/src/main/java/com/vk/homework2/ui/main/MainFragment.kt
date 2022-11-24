@@ -1,11 +1,13 @@
 package com.vk.homework2.ui.main
 
+import android.annotation.SuppressLint
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
@@ -21,8 +23,9 @@ import kotlinx.coroutines.withContext
 class MainFragment : Fragment() {
 
     private val viewModel by viewModels<MainViewModel>()
-
     private val pictureAdapter = PictureAdapter()
+    private lateinit var loadingStub: ProgressBar
+    private lateinit var errorStub: TextView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,23 +42,27 @@ class MainFragment : Fragment() {
             adapter = pictureAdapter
         }
 
-        val stub = view.findViewById<TextView>(R.id.stub)
+        errorStub = view.findViewById<TextView>(R.id.errorStub)
+        loadingStub = view.findViewById(R.id.loadingStub)
+        errorStub.setOnClickListener { loadPicture() }
+        loadPicture()
 
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun loadPicture() {
         viewLifecycleOwner.lifecycleScope.launch {
-            stub.isVisible = true
-            stub.text = "Loading..."
-            // stub.setOnClickListener(null)
-            delay(1000)
-
+            loadingStub.isVisible = true
+            errorStub.isVisible = false
             try {
                 val list = withContext(Dispatchers.IO) { viewModel.getPictures() }
                 pictureAdapter.submitList(list)
-                stub.isVisible = false
             } catch (error: Throwable) {
-                stub.isVisible = true
-                stub.text = "Error: ${error.message}"
+                errorStub.isVisible = true
+                errorStub.text = "Error: ${error.message}"
                 error.printStackTrace()
-                // stub.setOnClickListener {  }
+            } finally {
+                loadingStub.isVisible = false
             }
         }
     }
@@ -63,5 +70,4 @@ class MainFragment : Fragment() {
     companion object {
         fun newInstance() = MainFragment()
     }
-
 }
